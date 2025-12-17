@@ -222,7 +222,7 @@ jobs:
 
   build-mac:
     name: build-mac
-    runs-on: macos-13
+    runs-on: macos-15-intel
 
     steps:
       - uses: actions/checkout@main
@@ -251,7 +251,7 @@ jobs:
            -DLauncher_NOTIFICATION_URL:STRING=https://files.multimc.org/notifications.json \
            -DCMAKE_INSTALL_PREFIX:PATH="/Users/runner/work/UltimMC/build/dist" \
            -DCMAKE_PREFIX_PATH="$(brew --prefix qt@5)/lib/cmake" \
-           -DQt5_DIR="$(brew --prefix qt@5)" \
+           -DQt5_DIR="$(brew --prefix qt@5)/lib/cmake/Qt5" \
            -DLauncher_UPDATER_BASE=https://files.multimc.org/update/ \
            -DLauncher_PASTE_EE_API_KEY:STRING=utLvciUouSURFzfjPxLBf5W4ISsUX4pwBDF7N1AfZ \
            -DLauncher_ANALYTICS_ID:STRING=UA-87731965-2 \
