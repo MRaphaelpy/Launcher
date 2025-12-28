@@ -276,7 +276,8 @@ QDir MinecraftInstance::versionsPath() const
 QStringList MinecraftInstance::getClassPath() const
 {
     QStringList jars, nativeJars;
-    auto javaArchitecture = settings()->get("JavaArchitecture").toString();
+    auto javaArchitectureStr = settings()->get("JavaArchitecture").toString();
+    Sys::Architecture javaArchitecture = Sys::Architecture::deserialize(javaArchitectureStr);
     auto profile = m_components->getProfile();
     profile->getLibraryFiles(javaArchitecture, jars, nativeJars, getLocalLibraryPath(), binRoot());
     return jars;
@@ -291,7 +292,8 @@ QString MinecraftInstance::getMainClass() const
 QStringList MinecraftInstance::getNativeJars() const
 {
     QStringList jars, nativeJars;
-    auto javaArchitecture = settings()->get("JavaArchitecture").toString();
+    auto javaArchitectureStr = settings()->get("JavaArchitecture").toString();
+    Sys::Architecture javaArchitecture = Sys::Architecture::deserialize(javaArchitectureStr);
     auto profile = m_components->getProfile();
     profile->getLibraryFiles(javaArchitecture, jars, nativeJars, getLocalLibraryPath(), binRoot());
     return nativeJars;
@@ -556,7 +558,8 @@ QString MinecraftInstance::createLaunchScript(AuthSessionPtr session, QuickPlayT
     // libraries and class path.
     {
         QStringList jars, nativeJars;
-        auto javaArchitecture = settings()->get("JavaArchitecture").toString();
+        auto javaArchitectureStr = settings()->get("JavaArchitecture").toString();
+        Sys::Architecture javaArchitecture = Sys::Architecture::deserialize(javaArchitectureStr);
         profile->getLibraryFiles(javaArchitecture, jars, nativeJars, getLocalLibraryPath(), binRoot());
         for(auto file: jars)
         {
@@ -613,7 +616,8 @@ QStringList MinecraftInstance::verboseDescription(AuthSessionPtr session, QuickP
     {
         out << "Libraries:";
         QStringList jars, nativeJars;
-        auto javaArchitecture = settings->get("JavaArchitecture").toString();
+        auto javaArchitectureStr = settings->get("JavaArchitecture").toString();
+        Sys::Architecture javaArchitecture = Sys::Architecture::deserialize(javaArchitectureStr);
         profile->getLibraryFiles(javaArchitecture, jars, nativeJars, getLocalLibraryPath(), binRoot());
         auto printLibFile = [&](const QString & path)
         {

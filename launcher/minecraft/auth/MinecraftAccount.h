@@ -29,6 +29,7 @@
 #include "Usable.h"
 #include "AccountData.h"
 #include "QObjectPtr.h"
+#include "skins/SkinTypes.h"
 
 #include "providers/BaseAuthProvider.h"
 
@@ -80,19 +81,12 @@ public: /* construction */
 
     static MinecraftAccountPtr createBlankMSA();
 
-    static MinecraftAccountPtr loadFromJsonV2(const QJsonObject &json);
     static MinecraftAccountPtr loadFromJsonV3(const QJsonObject &json);
 
     //! Saves a MinecraftAccount to a JSON object and returns it.
     QJsonObject saveToJson() const;
 
 public: /* manipulation */
-
-    /**
-     * Attempt to login. Empty password means we use the token.
-     * If the attempt fails because we already are performing some task, it returns false.
-     */
-    shared_qobject_ptr<AccountTask> login(QString password);
 
     shared_qobject_ptr<AccountTask> loginMSA();
 
@@ -101,6 +95,10 @@ public: /* manipulation */
     shared_qobject_ptr<AccountTask> loginElyby(QString password);
 
     shared_qobject_ptr<AccountTask> refresh();
+
+    shared_qobject_ptr<AccountTask> createMinecraftProfile(const QString& profileName);
+
+    shared_qobject_ptr<AccountTask> setSkin(Skins::Model model, QByteArray texture, const QString& capeUUID);
 
     shared_qobject_ptr<AccountTask> currentTask();
 
@@ -118,12 +116,8 @@ public: /* queries */
         return data.internalId;
     }
 
-    QString accountDisplayString() const {
-        return data.accountDisplayString();
-    }
-
-    QString mojangUserName() const {
-        return data.userName();
+    QString gamerTag() const {
+        return data.gamerTag();
     }
 
     QString accessToken() const {
@@ -138,15 +132,11 @@ public: /* queries */
         return data.profileName();
     }
 
+    QString xid() const {
+        return data.xid();
+    }
+
     bool isActive() const;
-
-    bool canMigrate() const {
-        return data.canMigrateToMSA;
-    }
-
-    bool isMSA() const {
-        return data.type == AccountType::MSA;
-    }
 
     bool ownsMinecraft() const {
         return data.minecraftEntitlement.ownsMinecraft;
@@ -185,8 +175,14 @@ public: /* queries */
 
     QPixmap getFace() const;
 
+    QByteArray getSkin() const;
+    QString getCurrentCape() const;
+    Skins::Model getSkinModel() const;
+
+
     //! Returns the current state of the account
     AccountState accountState() const;
+    QString accountStateText() const;
 
     AccountData * accountData() {
         return &data;
@@ -200,6 +196,9 @@ public: /* queries */
         return data.lastError();
     }
 
+    void updateCapeCache() const;
+
+    void replaceDataWith(MinecraftAccountPtr other);
 signals:
     /**
      * This signal is emitted when the account changes

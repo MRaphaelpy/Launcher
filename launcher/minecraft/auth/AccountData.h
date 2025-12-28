@@ -58,7 +58,6 @@ enum class AccountState {
 
 struct AccountData {
     QJsonObject saveState() const;
-    bool resumeStateFromV2(QJsonObject data);
     bool resumeStateFromV3(QJsonObject data);
 
     AuthProviderPtr provider;
@@ -81,12 +80,9 @@ struct AccountData {
     QString profileId() const;
     QString profileName() const;
 
-    QString lastError() const;
+    QString xid() const;
 
-    AccountType type = AccountType::MSA;
-    bool legacy = false;
-    bool canMigrateToMSA = false;
-    bool mustMigrateToMSA = false;
+    QString lastError() const;
 
     Katabasis::Token msaToken;
     Katabasis::Token userToken;
